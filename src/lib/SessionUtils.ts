@@ -5,7 +5,11 @@ import fs from "fs/promises";
 import path from "path";
 import { unstable_parseMultipartFormData } from "next/server";
 import { FaissStore } from "@langchain/community/vectorstores/faiss";
-import { AzureOpenAIEmbeddings, OpenAIEmbeddings } from "@langchain/openai";
+import {
+  AzureChatOpenAI,
+  AzureOpenAIEmbeddings,
+  OpenAIEmbeddings,
+} from "@langchain/openai";
 import {
   GoogleGenerativeAIEmbeddings,
   ChatGoogleGenerativeAI,
@@ -473,11 +477,20 @@ async function processFiles(
 
   console.log("splitDocs Completed...");
 
-  const embeddings = new GoogleGenerativeAIEmbeddings({
-    model: "embedding-001", // 768 dimensions
-    // taskType: TaskType.RETRIEVAL_DOCUMENT,
-    // title: "Document title",
+  // Initialize Azure OpenAI Embeddings
+  const embeddings = new AzureOpenAIEmbeddings({
+    azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
+    azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
+    azureOpenAIApiEmbeddingsDeploymentName:
+      process.env.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME,
+    azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
   });
+
+  // const embeddings = new GoogleGenerativeAIEmbeddings({
+  //   model: "embedding-001", // 768 dimensions
+  //   // taskType: TaskType.RETRIEVAL_DOCUMENT,
+  //   // title: "Document title",
+  // });
 
   const vectorStore = await FaissStore.fromDocuments(splitDocs, embeddings);
 
@@ -508,19 +521,19 @@ export async function executePrompt(
 
   try {
     // Initialize Azure OpenAI Embeddings
-    // const embeddings = new AzureOpenAIEmbeddings({
-    //   azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
-    //   azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
-    //   azureOpenAIApiDeploymentName:
-    //     process.env.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME,
-    //   azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
-    // });
-
-    const embeddings = new GoogleGenerativeAIEmbeddings({
-      model: "embedding-001", // 768 dimensions
-      // taskType: TaskType.RETRIEVAL_DOCUMENT,
-      // title: "Document title",
+    const embeddings = new AzureOpenAIEmbeddings({
+      azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
+      azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
+      azureOpenAIApiDeploymentName:
+        process.env.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME,
+      azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
     });
+
+    // const embeddings = new GoogleGenerativeAIEmbeddings({
+    //   model: "embedding-001", // 768 dimensions
+    //   // taskType: TaskType.RETRIEVAL_DOCUMENT,
+    //   // title: "Document title",
+    // });
 
     // const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
 
@@ -566,13 +579,22 @@ export async function executePrompt(
     // const result = await model.generateContent(fullPrompt);
     // const response = await result.response;
     // const generatedText = response.text();
-    const llm = new ChatGoogleGenerativeAI({
-      model: "gemini-1.5-pro",
-      temperature: 0,
-      maxRetries: 2,
-      // other params...
+    // const llm = new ChatGoogleGenerativeAI({
+    //   model: "gemini-1.5-pro",
+    //   temperature: 0,
+    //   maxRetries: 2,
+    //   // other params...
+    // });
+    console.log("fullPrompt", fullPrompt);
+    const llm = new AzureChatOpenAI({
+      azureOpenAIApiKey: process.env.AZURE_OPENAI_API_KEY,
+      azureOpenAIApiDeploymentName:
+        process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME,
+      azureOpenAIApiVersion: process.env.AZURE_OPENAI_API_VERSION,
+      azureOpenAIApiInstanceName: process.env.AZURE_OPENAI_API_INSTANCE_NAME,
     });
 
+    console.log("llm initiated");
     const result = await llm.invoke(fullPrompt);
     const generatedText = await result.content.toLocaleString();
 
