@@ -24,7 +24,7 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 interface Message {
   role: "user" | "assistant";
   content: string;
-  citations: Citation[];
+  citations?: Citation[];
 }
 
 interface ChatWindowProps {
@@ -53,7 +53,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const handleSendMessage = async () => {
     if (input.trim() === "") return;
 
-    const userMessage: Message = { role: "user", content: input };
+    const userMessage: Message = {
+      role: "user",
+      content: input,
+    };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
@@ -74,10 +77,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         content: response.generatedText,
         citations: response.citations,
       };
-      //   const assistantMessage: Message = {
-      //     role: "assistant",
-      //     content: "some response from AI",
-      //   };
+
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error("Error in chat:", error);

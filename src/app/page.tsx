@@ -2,7 +2,8 @@
 
 import ChatWindow from "@/components/ChatWindow";
 import FileUpload from "@/components/FileUpload";
-import SessionManager from "@/components/sessionManager";
+// import SessionManager from "@/components/SessionManager";
+import SessionManager from "@/components/SessionManager";
 import SummaryTable from "@/components/SummaryTable";
 
 import { Button } from "@/components/ui/button";

@@ -1,9 +1,10 @@
 // /lib/sessionUtils.ts
 "use server";
 import { BlobServiceClient } from "@azure/storage-blob";
-import fs from "fs/promises";
+import * as fs from "fs/promises";
+import * as fsSync from "fs";
 import path from "path";
-import { unstable_parseMultipartFormData } from "next/server";
+// import { unstable_parseMultipartFormData } from "next/server";
 import { FaissStore } from "@langchain/community/vectorstores/faiss";
 import {
   AzureChatOpenAI,
@@ -385,7 +386,7 @@ async function processFilesFromAzureBlob(sessionId: string): Promise<void> {
       const filePath = path.join(tempDir, fileName);
 
       await new Promise((resolve, reject) => {
-        const fileStream = fs.createWriteStream(filePath);
+        const fileStream = fsSync.createWriteStream(filePath);
         downloadBlockBlobResponse
           .readableStreamBody!.pipe(fileStream)
           .on("error", reject)
@@ -605,7 +606,7 @@ export async function executePrompt(
   }
 }
 
-export async function isValidFolderName(name: string): boolean {
+export async function isValidFolderName(name: string): Promise<boolean> {
   const invalidChars = /[<>:"/\\|?*\x00-\x1F]/;
   return !invalidChars.test(name) && name.trim() !== "";
 }

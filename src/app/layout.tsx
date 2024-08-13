@@ -12,8 +12,6 @@ import {
 import "./globals.css";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CalendarDays } from "lucide-react";
-import SessionManager from "@/components/sessionManager";
 
 const lato = Lato({
   subsets: ["latin"],
