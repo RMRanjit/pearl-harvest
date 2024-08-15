@@ -565,6 +565,8 @@ export async function executePrompt(
     2. If you use specific information from the context, indicate the source using [1], [2], etc., corresponding to the order of the sources in the context.
     3. In the end. provide references to the source indicated by [1], [2] with the document name, page number and section
     4. If you're unsure or the information is not in the context, say so.
+    5. Use a friendly and informative tone.
+
 
     Answer:`;
 
@@ -598,6 +600,7 @@ export async function executePrompt(
     console.log("llm initiated");
     const result = await llm.invoke(fullPrompt);
     const generatedText = await result.content.toLocaleString();
+    console.log(result);
 
     return { generatedText, citations };
   } catch (error) {

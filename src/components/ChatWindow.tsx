@@ -104,25 +104,27 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             <CardTitle>Chat</CardTitle>
           </CardHeader> */}
           <CardContent>
-            <ScrollArea className="h-[200px]">
+            <ScrollArea className="relative h-[200px]">
               {messages.map(
                 (message, index) =>
                   message.role === "user" ? (
                     <div
                       key={index}
-                      className="inline-block p-2 text-left bg-blue-200 rounded-lg"
+                      className="inline-flex items-center p-2 my-2 text-right bg-blue-200 rounded-lg text-sm"
                     >
                       {message.content}
                     </div>
                   ) : (
                     <div
                       key={index}
-                      className="inline-block p-2 my-2 text-right bg-gray-200 rounded-lg"
+                      className="inline-flex items-start p-2 my-2 mx-15 bg-gray-200 rounded-lg"
                     >
-                      <Avatar>
+                      <Avatar className="flex-shrink-0 align-top">
                         <AvatarImage src="https://i.pravatar.cc/150?img=2"></AvatarImage>
                       </Avatar>
-                      <div className="ml-2">{message.content}</div>
+                      <div className="ml-2 whitespace-pre-wrap">
+                        {message.content}
+                      </div>
                     </div>
                   )
 
