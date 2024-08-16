@@ -17,6 +17,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 // import { createLLM, createRetrievalChain } from "@/lib/langchain";
 // import { getVectorStore } from "@/lib/vectorStore";
+import path from "path";
 
 import { Citation, executePrompt } from "@/lib/SessionUtils";
 import { Avatar, AvatarImage } from "./ui/avatar";
@@ -31,6 +32,25 @@ interface ChatWindowProps {
   sessionId: string;
   selectedModel?: string;
 }
+
+const CitationDisplay: React.FC<{ citations: Citation[] }> = ({
+  citations,
+}) => {
+  const uniqueSources = Array.from(
+    new Set(citations.map((citation) => citation.source))
+  );
+
+  return (
+    <div className="mt-1 text-xs text-gray-600">
+      Citations:
+      <ul className="list-disc pl-5 mt-1">
+        {uniqueSources.map((source, index) => (
+          <li key={index}>{path.basename(source)}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
   sessionId,
@@ -174,10 +194,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                       </p>
                     </div>
                   </div>
-                  {message.citations && (
-                    <div className="mt-1 text-xs text-gray-600">
-                      Citations: {/* Add citation rendering logic here */}
-                    </div>
+                  {message.citations && message.citations.length > 0 && (
+                    <CitationDisplay citations={message.citations} />
                   )}
                 </div>
               ))}
