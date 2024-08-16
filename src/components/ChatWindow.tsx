@@ -104,8 +104,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             <CardTitle>Chat</CardTitle>
           </CardHeader> */}
           <CardContent>
-            <ScrollArea className="relative h-[200px]">
-              {messages.map(
+            <ScrollArea className=" h-[200px] pr-4">
+              {/* {messages.map(
                 (message, index) =>
                   message.role === "user" ? (
                     <div
@@ -144,7 +144,43 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 //   </div>
                 // </div>
                 //)
-              )}
+              )} */}
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex flex-col ${
+                    message.role === "user" ? "items-end" : "items-start"
+                  } mb-4`}
+                >
+                  <div
+                    className={`flex items-start ${
+                      message.role === "user" ? "flex-row-reverse" : "flex-row"
+                    }`}
+                  >
+                    {message.role === "assistant" && (
+                      <Avatar className="flex-shrink-0 mr-2">
+                        <AvatarImage src="https://i.pravatar.cc/150?img=2" />
+                      </Avatar>
+                    )}
+                    <div
+                      className={`p-3 rounded-lg ${
+                        message.role === "user"
+                          ? "bg-blue-200 text-right"
+                          : "bg-gray-200"
+                      }`}
+                    >
+                      <p className="text-sm whitespace-pre-wrap">
+                        {message.content}
+                      </p>
+                    </div>
+                  </div>
+                  {message.citations && (
+                    <div className="mt-1 text-xs text-gray-600">
+                      Citations: {/* Add citation rendering logic here */}
+                    </div>
+                  )}
+                </div>
+              ))}
               <div ref={messagesEndRef} />
             </ScrollArea>
             <div className="mt-4 flex">

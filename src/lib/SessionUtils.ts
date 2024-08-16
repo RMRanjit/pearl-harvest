@@ -39,6 +39,7 @@ interface ExecutePromptResult {
 
 const uploadFolder = process.env.UPLOAD_FOLDER || "";
 const isAzureBlob = uploadFolder.startsWith("https://");
+// const isAzureBlob =
 
 export async function getSessions(): Promise<Session[]> {
   if (isAzureBlob) {
